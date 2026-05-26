@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BarberFácil — Painel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:           #111210;
+      --surface:      #1c1d1a;
+      --surface2:     #232421;
+      --border:       #2e2f2b;
+      --text:         #e8e6df;
+      --muted:        #7a7870;
+      --accent:       #c9933a;
+      --accent-hover: #d9a84a;
+      --tag-colab-bg: rgba(74,120,196,.15);
+      --tag-colab:    #7aaae0;
+      --radius:       6px;
+      --font:         'IBM Plex Sans', sans-serif;
+      --font-mono:    'IBM Plex Mono', monospace;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .logo {
+      font-family: var(--font-mono);
+      font-size: 1.1rem;
+      color: var(--accent);
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .badge {
+      font-size: .72rem;
+      font-weight: 600;
+      padding: .2rem .55rem;
+      border-radius: 99px;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      background: var(--tag-colab-bg);
+      color: var(--tag-colab);
+      border: 1px solid var(--tag-colab);
+    }
+
+    .btn-logout {
+      font-family: var(--font);
+      font-size: .82rem;
+      font-weight: 500;
+      color: var(--muted);
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: .35rem .8rem;
+      cursor: pointer;
+      transition: color .18s, border-color .18s;
+    }
+    .btn-logout:hover { color: var(--text); border-color: var(--muted); }
+
+    main {
+      max-width: 760px;
+      margin: 2.5rem auto;
+      padding: 0 1.5rem;
+    }
+
+    .welcome {
+      margin-bottom: 2.5rem;
+    }
+    .welcome h1 {
+      font-size: 1.4rem;
+      font-weight: 600;
+      margin-bottom: .3rem;
+    }
+    .welcome p {
+      font-size: .88rem;
+      color: var(--muted);
+    }
+
+    /* Grid de módulos (placeholders) */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+
+    .modulo-card {
+      background: var(--surface);
+      border: 1px dashed var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem 1.25rem;
+    }
+
+    .modulo-card .icon {
+      font-size: 1.4rem;
+      margin-bottom: .6rem;
+    }
+
+    .modulo-card h3 {
+      font-size: .95rem;
+      font-weight: 600;
+      margin-bottom: .25rem;
+    }
+
+    .modulo-card p {
+      font-size: .8rem;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .em-breve {
+      display: inline-block;
+      font-size: .65rem;
+      font-weight: 600;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      border-radius: 99px;
+      padding: .1rem .45rem;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      margin-top: .6rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <span class="logo">BarberFácil</span>
+    <div class="user-info">
+      <span id="nomeHeader">—</span>
+      <span class="badge">Colaborador</span>
+      <button class="btn-logout" onclick="fazerLogout()">Sair</button>
+    </div>
+  </header>
+
+  <main>
+    <div class="welcome">
+      <h1>Olá, <span id="nomeWelcome">—</span></h1>
+      <p>Selecione um módulo para continuar.</p>
+    </div>
+
+    <div class="grid">
+      <div class="modulo-card">
+        <div class="icon">📦</div>
+        <h3>Controle de Estoque</h3>
+        <p>Entrada e saída de produtos.</p>
+        <span class="em-breve">Em breve</span>
+      </div>
+      <div class="modulo-card">
+        <div class="icon">🛒</div>
+        <h3>Registrar Venda</h3>
+        <p>Registre pedidos e baixe o estoque.</p>
+        <span class="em-breve">Em breve</span>
+      </div>
+      <div class="modulo-card">
+        <div class="icon">👤</div>
+        <h3>Clientes</h3>
+        <p>Cadastre e consulte clientes.</p>
+        <span class="em-breve">Em breve</span>
+      </div>
+      <div class="modulo-card">
+        <div class="icon">📋</div>
+        <h3>Relatório do Dia</h3>
+        <p>Resumo do que foi vendido hoje.</p>
+        <span class="em-breve">Em breve</span>
+      </div>
+    </div>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    // Protege a rota — qualquer usuário logado pode entrar,
+    // mas admin é redirecionado para o painel correto
+    const sessao = exigirLogin();
+    if (!sessao) throw new Error("Sem sessão");
+
+    if (sessao.role === "admin") {
+      window.location.href = "painel-admin.html";
+    }
+
+    document.getElementById("nomeHeader").textContent = sessao.nome;
+    document.getElementById("nomeWelcome").textContent = sessao.nome;
+  </script>
+</body>
+</html>

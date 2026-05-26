@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BarberFácil — Login</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    /* ── DESIGN TOKENS ───────────────────────────────────────────
+       Altere estas variáveis para mudar o tema global.
+       O designer de UI/UX pode substituir o bloco <style> inteiro.
+    ──────────────────────────────────────────────────────────── */
+    :root {
+      --bg:           #111210;
+      --surface:      #1c1d1a;
+      --border:       #2e2f2b;
+      --text:         #e8e6df;
+      --muted:        #7a7870;
+      --accent:       #c9933a;
+      --accent-hover: #d9a84a;
+      --error-bg:     rgba(201,74,58,.12);
+      --error-border: #c94a3a;
+      --error-text:   #e07060;
+      --radius:       6px;
+      --font:         'IBM Plex Sans', sans-serif;
+      --font-mono:    'IBM Plex Mono', monospace;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2.5rem;
+      width: 100%;
+      max-width: 380px;
+    }
+
+    .logo {
+      font-family: var(--font-mono);
+      font-size: 1.4rem;
+      font-weight: 500;
+      color: var(--accent);
+      margin-bottom: 0.3rem;
+    }
+
+    .subtitle {
+      font-size: 0.84rem;
+      color: var(--muted);
+      margin-bottom: 2rem;
+    }
+
+    label {
+      display: block;
+      font-size: 0.76rem;
+      font-weight: 500;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      margin-bottom: .35rem;
+    }
+
+    input {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-size: .95rem;
+      padding: .65rem .9rem;
+      margin-bottom: 1.25rem;
+      outline: none;
+      transition: border-color .18s;
+    }
+    input:focus { border-color: var(--accent); }
+    input::placeholder { color: var(--muted); }
+
+    button[type="submit"] {
+      width: 100%;
+      background: var(--accent);
+      color: #111;
+      font-family: var(--font);
+      font-size: .9rem;
+      font-weight: 600;
+      border: none;
+      border-radius: var(--radius);
+      padding: .75rem;
+      cursor: pointer;
+      transition: background .18s;
+      margin-top: .2rem;
+    }
+    button[type="submit"]:hover { background: var(--accent-hover); }
+
+    .link-row {
+      text-align: center;
+      margin-top: 1.4rem;
+      font-size: .83rem;
+      color: var(--muted);
+    }
+    .link-row a { color: var(--accent); text-decoration: none; }
+    .link-row a:hover { text-decoration: underline; }
+
+    /* Mensagem de erro */
+    .msg {
+      font-size: .83rem;
+      padding: .6rem .9rem;
+      border-radius: var(--radius);
+      margin-bottom: 1rem;
+      display: none;
+    }
+    .msg.erro {
+      background: var(--error-bg);
+      border: 1px solid var(--error-border);
+      color: var(--error-text);
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <div class="logo">BarberFácil</div>
+    <div class="subtitle">Acesse com seu CPF e senha</div>
+
+    <div id="msg" class="msg" role="alert"></div>
+
+    <form id="formLogin" novalidate>
+      <label for="cpf">CPF</label>
+      <input type="text" id="cpf" placeholder="00000000000"
+             maxlength="11" inputmode="numeric" autocomplete="username" required>
+
+      <label for="senha">Senha</label>
+      <input type="password" id="senha" placeholder="••••••••"
+             autocomplete="current-password" required>
+
+      <button type="submit">Entrar</button>
+    </form>
+
+    <div class="link-row">
+      Sem conta? <a href="cadastro.html">Cadastre-se</a>
+    </div>
+  </div>
+
+  <!-- Ordem importa: config → storage → auth → página -->
+  <script src="js/config.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    // Se já há sessão ativa, redireciona direto
+    const sessao = getSessao();
+    if (sessao) {
+      window.location.href = sessao.role === "admin"
+        ? "painel-admin.html"
+        : "painel-colaborador.html";
+    }
+
+    document.getElementById("formLogin").addEventListener("submit", function (e) {
+      e.preventDefault();
+      const cpf   = document.getElementById("cpf").value.trim();
+      const senha = document.getElementById("senha").value;
+
+      const resultado = fazerLogin(cpf, senha);
+
+      if (!resultado.ok) {
+        const el = document.getElementById("msg");
+        el.textContent = resultado.erro;
+        el.className = "msg erro";
+        return;
+      }
+
+      window.location.href = resultado.role === "admin"
+        ? "painel-admin.html"
+        : "painel-colaborador.html";
+    });
+
+    // Limpa mensagem ao digitar
+    ["cpf", "senha"].forEach(id => {
+      document.getElementById(id).addEventListener("input", () => {
+        const el = document.getElementById("msg");
+        el.className = "msg";
+        el.textContent = "";
+      });
+    });
+  </script>
+</body>
+</html>

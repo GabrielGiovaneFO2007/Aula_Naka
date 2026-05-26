@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BarberFácil — Painel Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:           #111210;
+      --surface:      #1c1d1a;
+      --surface2:     #232421;
+      --border:       #2e2f2b;
+      --text:         #e8e6df;
+      --muted:        #7a7870;
+      --accent:       #c9933a;
+      --accent-hover: #d9a84a;
+      --tag-admin-bg: rgba(201,147,58,.15);
+      --tag-admin:    #c9933a;
+      --tag-colab-bg: rgba(74,120,196,.15);
+      --tag-colab:    #7aaae0;
+      --radius:       6px;
+      --font:         'IBM Plex Sans', sans-serif;
+      --font-mono:    'IBM Plex Mono', monospace;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .logo {
+      font-family: var(--font-mono);
+      font-size: 1.1rem;
+      color: var(--accent);
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .badge {
+      font-size: .72rem;
+      font-weight: 600;
+      padding: .2rem .55rem;
+      border-radius: 99px;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      background: var(--tag-admin-bg);
+      color: var(--tag-admin);
+      border: 1px solid var(--tag-admin);
+    }
+
+    .btn-logout {
+      font-family: var(--font);
+      font-size: .82rem;
+      font-weight: 500;
+      color: var(--muted);
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: .35rem .8rem;
+      cursor: pointer;
+      transition: color .18s, border-color .18s;
+    }
+    .btn-logout:hover { color: var(--text); border-color: var(--muted); }
+
+    /* ── Main ── */
+    main {
+      max-width: 760px;
+      margin: 2.5rem auto;
+      padding: 0 1.5rem;
+    }
+
+    .welcome {
+      margin-bottom: 2rem;
+    }
+    .welcome h1 {
+      font-size: 1.4rem;
+      font-weight: 600;
+      margin-bottom: .3rem;
+    }
+    .welcome p {
+      font-size: .88rem;
+      color: var(--muted);
+    }
+
+    /* ── Seção colaboradores ── */
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+    .section-header h2 {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+    .count {
+      font-family: var(--font-mono);
+      font-size: .8rem;
+      color: var(--muted);
+    }
+
+    /* Tabela */
+    .tabela-wrap {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .875rem;
+    }
+
+    thead {
+      background: var(--surface2);
+    }
+
+    th {
+      text-align: left;
+      font-size: .72rem;
+      font-weight: 500;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      padding: .75rem 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    td {
+      padding: .75rem 1rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: var(--surface2); }
+
+    .cpf-cell {
+      font-family: var(--font-mono);
+      font-size: .83rem;
+      color: var(--muted);
+    }
+
+    .role-badge {
+      font-size: .7rem;
+      font-weight: 600;
+      padding: .15rem .5rem;
+      border-radius: 99px;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+    .role-admin {
+      background: var(--tag-admin-bg);
+      color: var(--tag-admin);
+      border: 1px solid var(--tag-admin);
+    }
+    .role-colaborador {
+      background: var(--tag-colab-bg);
+      color: var(--tag-colab);
+      border: 1px solid var(--tag-colab);
+    }
+
+    .empty {
+      text-align: center;
+      padding: 2.5rem 1rem;
+      color: var(--muted);
+      font-size: .88rem;
+    }
+
+    /* ── Placeholder de funcionalidades futuras ── */
+    .placeholder-section {
+      margin-top: 2.5rem;
+      background: var(--surface);
+      border: 1px dashed var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      text-align: center;
+      color: var(--muted);
+      font-size: .85rem;
+    }
+    .placeholder-section strong {
+      display: block;
+      color: var(--text);
+      margin-bottom: .3rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <span class="logo">BarberFácil</span>
+    <div class="user-info">
+      <span id="nomeHeader">—</span>
+      <span class="badge">Admin</span>
+      <button class="btn-logout" onclick="fazerLogout()">Sair</button>
+    </div>
+  </header>
+
+  <main>
+    <div class="welcome">
+      <h1>Bem-vindo, <span id="nomeWelcome">—</span></h1>
+      <p>Painel de administração — BarberFácil</p>
+    </div>
+
+    <!-- Colaboradores cadastrados -->
+    <div class="section-header">
+      <h2>Colaboradores</h2>
+      <span class="count" id="countLabel">0 cadastrados</span>
+    </div>
+
+    <div class="tabela-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>CPF</th>
+            <th>Perfil</th>
+          </tr>
+        </thead>
+        <tbody id="tbodyColaboradores">
+          <!-- preenchido por JS -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Placeholder para módulos futuros -->
+    <div class="placeholder-section">
+      <strong>Módulos futuros</strong>
+      Produtos, estoque, pedidos e relatórios serão adicionados aqui.
+    </div>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    // Protege a rota — só admin entra
+    const sessao = exigirLogin("admin");
+    if (!sessao) throw new Error("Sem sessão");
+
+    // Preenche nome no header e boas-vindas
+    document.getElementById("nomeHeader").textContent = sessao.nome;
+    document.getElementById("nomeWelcome").textContent = sessao.nome;
+
+    // Lista colaboradores
+    function renderColaboradores() {
+      const lista = getUsuarios();
+      const tbody = document.getElementById("tbodyColaboradores");
+      const count = document.getElementById("countLabel");
+
+      count.textContent = lista.length === 0
+        ? "Nenhum cadastrado"
+        : `${lista.length} cadastrado${lista.length > 1 ? "s" : ""}`;
+
+      if (lista.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="3" class="empty">
+              Nenhum colaborador cadastrado ainda.
+            </td>
+          </tr>`;
+        return;
+      }
+
+      tbody.innerHTML = lista.map(u => `
+        <tr>
+          <td>${escapeHtml(u.nome)}</td>
+          <td class="cpf-cell">${formatarCpf(u.cpf)}</td>
+          <td><span class="role-badge role-${u.role}">${u.role}</span></td>
+        </tr>
+      `).join("");
+    }
+
+    // Formata CPF: 000.000.000-00
+    function formatarCpf(cpf) {
+      return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
+    }
+
+    // Previne XSS ao inserir texto no DOM
+    function escapeHtml(str) {
+      return str.replace(/[&<>"']/g, c => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+      })[c]);
+    }
+
+    renderColaboradores();
+  </script>
+</body>
+</html>

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BarberFácil — Cadastro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:           #111210;
+      --surface:      #1c1d1a;
+      --border:       #2e2f2b;
+      --text:         #e8e6df;
+      --muted:        #7a7870;
+      --accent:       #c9933a;
+      --accent-hover: #d9a84a;
+      --error-bg:     rgba(201,74,58,.12);
+      --error-border: #c94a3a;
+      --error-text:   #e07060;
+      --success-bg:   rgba(74,156,106,.12);
+      --success-border:#4a9c6a;
+      --success-text: #6abf8a;
+      --radius:       6px;
+      --font:         'IBM Plex Sans', sans-serif;
+      --font-mono:    'IBM Plex Mono', monospace;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2.5rem;
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .logo {
+      font-family: var(--font-mono);
+      font-size: 1.4rem;
+      font-weight: 500;
+      color: var(--accent);
+      margin-bottom: .3rem;
+    }
+
+    .subtitle {
+      font-size: .84rem;
+      color: var(--muted);
+      margin-bottom: 2rem;
+    }
+
+    label {
+      display: block;
+      font-size: .76rem;
+      font-weight: 500;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      margin-bottom: .35rem;
+    }
+
+    input {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-size: .95rem;
+      padding: .65rem .9rem;
+      margin-bottom: 1.25rem;
+      outline: none;
+      transition: border-color .18s;
+    }
+    input:focus { border-color: var(--accent); }
+    input::placeholder { color: var(--muted); }
+
+    button[type="submit"] {
+      width: 100%;
+      background: var(--accent);
+      color: #111;
+      font-family: var(--font);
+      font-size: .9rem;
+      font-weight: 600;
+      border: none;
+      border-radius: var(--radius);
+      padding: .75rem;
+      cursor: pointer;
+      transition: background .18s;
+      margin-top: .2rem;
+    }
+    button[type="submit"]:hover { background: var(--accent-hover); }
+    button[type="submit"]:disabled {
+      background: var(--border);
+      color: var(--muted);
+      cursor: not-allowed;
+    }
+
+    .link-row {
+      text-align: center;
+      margin-top: 1.4rem;
+      font-size: .83rem;
+      color: var(--muted);
+    }
+    .link-row a { color: var(--accent); text-decoration: none; }
+    .link-row a:hover { text-decoration: underline; }
+
+    .msg {
+      font-size: .83rem;
+      padding: .6rem .9rem;
+      border-radius: var(--radius);
+      margin-bottom: 1rem;
+      display: none;
+    }
+    .msg.erro {
+      background: var(--error-bg);
+      border: 1px solid var(--error-border);
+      color: var(--error-text);
+      display: block;
+    }
+    .msg.sucesso {
+      background: var(--success-bg);
+      border: 1px solid var(--success-border);
+      color: var(--success-text);
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <div class="logo">BarberFácil</div>
+    <div class="subtitle">Criar conta de colaborador</div>
+
+    <div id="msg" class="msg" role="alert"></div>
+
+    <form id="formCadastro" novalidate>
+      <label for="nome">Nome completo</label>
+      <input type="text" id="nome" placeholder="João da Silva"
+             autocomplete="name" required>
+
+      <label for="cpf">CPF</label>
+      <input type="text" id="cpf" placeholder="00000000000"
+             maxlength="11" inputmode="numeric" autocomplete="off" required>
+
+      <label for="senha">Senha</label>
+      <input type="password" id="senha" placeholder="Mínimo 4 caracteres"
+             autocomplete="new-password" required>
+
+      <label for="confirmSenha">Confirmar senha</label>
+      <input type="password" id="confirmSenha" placeholder="Repita a senha"
+             autocomplete="new-password" required>
+
+      <button type="submit" id="btnCadastrar">Criar conta</button>
+    </form>
+
+    <div class="link-row">
+      Já tem conta? <a href="index.html">Faça login</a>
+    </div>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    // Se já logado, redireciona
+    const sessao = getSessao();
+    if (sessao) {
+      window.location.href = sessao.role === "admin"
+        ? "painel-admin.html"
+        : "painel-colaborador.html";
+    }
+
+    const form    = document.getElementById("formCadastro");
+    const msgEl   = document.getElementById("msg");
+    const btnEl   = document.getElementById("btnCadastrar");
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const nome        = document.getElementById("nome").value;
+      const cpf         = document.getElementById("cpf").value.trim();
+      const senha       = document.getElementById("senha").value;
+      const confirmSenha = document.getElementById("confirmSenha").value;
+
+      const resultado = cadastrarColaborador(nome, cpf, senha, confirmSenha);
+
+      if (!resultado.ok) {
+        msgEl.textContent = resultado.erro;
+        msgEl.className = "msg erro";
+        return;
+      }
+
+      // Sucesso — mostra mensagem e redireciona após 1.5s
+      msgEl.textContent = "Conta criada com sucesso! Redirecionando...";
+      msgEl.className = "msg sucesso";
+      btnEl.disabled = true;
+
+      setTimeout(() => {
+        window.location.href = "index.html";
+      }, 1500);
+    });
+
+    // Limpa mensagem ao editar qualquer campo
+    form.querySelectorAll("input").forEach(input => {
+      input.addEventListener("input", () => {
+        msgEl.className = "msg";
+        msgEl.textContent = "";
+      });
+    });
+  </script>
+</body>
+</html>
